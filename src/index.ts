@@ -9,7 +9,7 @@ import { convertDiagram, DIAGRAM_TYPES, type DiagramType, type OutputFormat } fr
 import { diagramCache } from "./cache.js";
 
 const server = new McpServer({
-  name: "text-2-diagrams",
+  name: "phantom-diagrams",
   version: "1.0.0",
 });
 
@@ -200,7 +200,7 @@ server.registerTool(
 // Warm up Kroki before accepting requests so the first tool call doesn't
 // absorb the container start latency (can be 30s+ on cold pull).
 await ensureKrokiRunning().catch((err: Error) => {
-  console.error(`[text-2-diagrams] Kroki warm-up failed: ${err.message}. Will retry on first tool call.`);
+  console.error(`[phantom-diagrams] Kroki warm-up failed: ${err.message}. Will retry on first tool call.`);
 });
 
 const transport = new StdioServerTransport();

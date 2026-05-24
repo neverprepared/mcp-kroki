@@ -1,4 +1,4 @@
-# mcp-text-2-diagrams
+# mcp-phantom-diagrams
 
 An MCP server that converts diagram markup text into images using a locally-managed [Kroki](https://kroki.io/) Docker stack. Supports 28+ diagram types (PlantUML, Mermaid, Graphviz, and more) with SVG, PNG, and JPEG output. Starts the Kroki containers automatically on first use — no manual Docker setup required.
 
@@ -25,7 +25,7 @@ SVG is returned as a text block. PNG/JPEG are returned as base64 image blocks, o
 
 ## Supported diagram types
 
-**Built-in** (no companion container required): `plantuml`, `graphviz`, `ditaa`, `svgbob`, `umlet`, `erd`, `nomnoml`, `structurizr`, `bytefield`, `c4plantuml`, `d2`, `dbml`, `pikchr`, `symbolator`, `vega`, `vega-lite`, `wavedrom`, `goat`
+**Built-in** (no companion container required): `plantuml`, `graphviz`, `ditaa`, `svgbob`, `umlet`, `erd`, `nomnoml`, `structurizr`, `bytefield`, `c4plantuml`, `d2`, `dbml`, `pikchr`, `symbolator`, `vega`, `vegalite`, `wavedrom`
 
 **Companion containers** (started automatically): `mermaid`, `bpmn`, `excalidraw`, `blockdiag`, `seqdiag`, `actdiag`, `nwdiag`, `packetdiag`, `rackdiag`, `diagramsnet`
 
@@ -48,9 +48,9 @@ Add to your `~/.claude/claude.json` (or project-level `.claude/claude.json`):
 ```json
 {
   "mcpServers": {
-    "text-2-diagrams": {
+    "phantom-diagrams": {
       "command": "node",
-      "args": ["/absolute/path/to/mcp-text-2-diagrams/dist/index.js"]
+      "args": ["/absolute/path/to/mcp-phantom-diagrams/dist/index.js"]
     }
   }
 }

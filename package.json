@@ -1,10 +1,10 @@
 {
-  "name": "@neverprepared/mcp-text-2-diagrams",
+  "name": "@neverprepared/mcp-phantom-diagrams",
   "version": "1.0.0",
   "type": "module",
   "description": "MCP server that converts diagram markup to images via a local Kroki instance",
   "bin": {
-    "mcp-text-2-diagrams": "dist/index.js"
+    "mcp-phantom-diagrams": "dist/index.js"
   },
   "scripts": {
     "build": "tsc",
