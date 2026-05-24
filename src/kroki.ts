@@ -19,14 +19,13 @@ export const DIAGRAM_TYPES = {
   structurizr:  { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
   bytefield:    { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
   c4plantuml:   { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
-  d2:           { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
+  d2:           { formats: ["svg"]                 as OutputFormat[], requiresCompanion: false },
   dbml:         { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
   pikchr:       { formats: ["svg"]                 as OutputFormat[], requiresCompanion: false },
   symbolator:   { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
   vega:         { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
-  "vega-lite":  { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
+  vegalite:     { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
   wavedrom:     { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: false },
-  goat:         { formats: ["svg"]                 as OutputFormat[], requiresCompanion: false },
 
   // Companion containers required
   mermaid:      { formats: ["svg", "png"]          as OutputFormat[], requiresCompanion: true },

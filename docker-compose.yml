@@ -2,7 +2,7 @@ services:
   kroki:
     image: yuzutech/kroki
     ports:
-      - "127.0.0.1:8000:8000"
+      - "127.0.0.1:18000:8000"
     environment:
       - KROKI_MERMAID_HOST=mermaid
       - KROKI_BPMN_HOST=bpmn

@@ -2,7 +2,7 @@ import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 
-export const KROKI_URL = process.env.KROKI_URL ?? "http://localhost:8000";
+export const KROKI_URL = process.env.KROKI_URL ?? "http://localhost:18000";
 const COMPOSE_PROJECT = "kroki-shared";
 const COMPOSE_TIMEOUT_MS = 5 * 60_000; // 5 min — allows for image pulls on first run
 const HEALTH_TIMEOUT_MS = 30_000;
@@ -22,7 +22,11 @@ async function isHealthy(): Promise<boolean> {
     const res = await fetch(`${KROKI_URL}/health`, {
       signal: AbortSignal.timeout(2_000),
     });
-    return res.ok;
+    if (!res.ok) return false;
+    // Kroki returns {"status":"pass"} — validate to avoid false positives
+    // from other services that happen to expose a /health endpoint.
+    const body = await res.json() as Record<string, unknown>;
+    return body["status"] === "pass";
   } catch {
     return false;
   }
@@ -79,7 +83,7 @@ async function waitForHealth(): Promise<void> {
   }
 
   throw new Error(
-    "Kroki did not become healthy within 30s — ensure Docker is running and port 8000 is free. " +
+    "Kroki did not become healthy within 30s — ensure Docker is running and port 18000 is free. " +
     "On first run, images may still be pulling; wait a moment and try again."
   );
 }
