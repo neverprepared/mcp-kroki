@@ -1,0 +1,7 @@
+dist/
+node_modules/
+*.js.map
+*.d.ts.map
+
+# Override global gitignore — CLAUDE.md is intentional docs for this repo
+!CLAUDE.md

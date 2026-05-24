@@ -1,0 +1,29 @@
+{
+  "name": "mcp-text-2-diagrams",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server that converts diagram markup to images via a local Kroki instance",
+  "bin": {
+    "mcp-text-2-diagrams": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc --watch",
+    "test": "node --import tsx/esm --test 'test/**/*.test.ts'",
+    "test:unit": "node --import tsx/esm --test 'test/unit.test.ts'",
+    "test:integration": "node --import tsx/esm --test 'test/integration.test.ts'"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,0 +1,37 @@
+services:
+  kroki:
+    image: yuzutech/kroki
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - KROKI_MERMAID_HOST=mermaid
+      - KROKI_BPMN_HOST=bpmn
+      - KROKI_EXCALIDRAW_HOST=excalidraw
+      - KROKI_BLOCKDIAG_HOST=blockdiag
+      - KROKI_SEQDIAG_HOST=blockdiag
+      - KROKI_ACTDIAG_HOST=blockdiag
+      - KROKI_NWDIAG_HOST=blockdiag
+      - KROKI_PACKETDIAG_HOST=blockdiag
+      - KROKI_RACKDIAG_HOST=blockdiag
+      - KROKI_DIAGRAMSNET_HOST=diagramsnet
+    depends_on:
+      - mermaid
+      - bpmn
+      - excalidraw
+      - blockdiag
+      - diagramsnet
+
+  mermaid:
+    image: yuzutech/kroki-mermaid
+
+  bpmn:
+    image: yuzutech/kroki-bpmn
+
+  excalidraw:
+    image: yuzutech/kroki-excalidraw
+
+  blockdiag:
+    image: yuzutech/kroki-blockdiag
+
+  diagramsnet:
+    image: yuzutech/kroki-diagramsnet
