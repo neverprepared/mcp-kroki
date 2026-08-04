@@ -1,6 +1,6 @@
-# mcp-phantom-diagrams
+# mcp-kroki
 
-An MCP server that converts diagram markup text into images using a locally-managed [Kroki](https://kroki.io/) Docker stack. Supports 28+ diagram types (PlantUML, Mermaid, Graphviz, and more) with SVG, PNG, and JPEG output. Starts the Kroki containers automatically on first use — no manual Docker setup required.
+An MCP server that converts diagram markup text into images using a [Kroki](https://kroki.io/) instance (a shared/central endpoint via `KROKI_URL`, or a locally-managed Docker stack it auto-starts as a fallback). Supports 28+ diagram types (PlantUML, Mermaid, Graphviz, and more) with SVG, PNG, and JPEG output. Starts the Kroki containers automatically on first use — no manual Docker setup required.
 
 ## Tools
 
@@ -48,15 +48,16 @@ Add to your `~/.claude/claude.json` (or project-level `.claude/claude.json`):
 ```json
 {
   "mcpServers": {
-    "phantom-diagrams": {
-      "command": "node",
-      "args": ["/absolute/path/to/mcp-phantom-diagrams/dist/index.js"]
+    "kroki": {
+      "command": "npx",
+      "args": ["-y", "@neverprepared/mcp-kroki"],
+      "env": { "KROKI_URL": "http://localhost:18000" }
     }
   }
 }
 ```
 
-On first start, the server pulls and starts the Kroki Docker images automatically (shared across all Claude profiles via the `kroki-shared` compose project). Subsequent starts are instant if containers are already running.
+Point `KROKI_URL` at a shared/central Kroki endpoint (recommended for a multi-agent setup). If it is unset and no Kroki is reachable, the server falls back to pulling and starting the Kroki Docker images automatically (shared across all Claude profiles via the `kroki-shared` compose project) — subsequent starts are instant if containers are already running.
 
 ## Development
 
