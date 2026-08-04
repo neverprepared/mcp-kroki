@@ -59,6 +59,10 @@ jobs:
           SHA256: ${{ steps.meta.outputs.sha256 }}
         run: |
           set -euo pipefail
+          if [ -z "${HOMEBREW_TAP_TOKEN:-}" ]; then
+            echo "HOMEBREW_TAP_TOKEN not set — skipping formula push (add the secret to automate this)."
+            exit 0
+          fi
           git clone "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/neverprepared/homebrew-tap.git" tap
           cat > tap/Formula/mcp-kroki.rb <<RUBY
           # typed: false
