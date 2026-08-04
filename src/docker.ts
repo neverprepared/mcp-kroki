@@ -1,6 +1,7 @@
 import { spawn } from "child_process";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { mkdirSync, writeFileSync } from "fs";
+import { tmpdir } from "os";
+import { join } from "path";
 
 export const KROKI_URL = process.env.KROKI_URL ?? "http://localhost:18000";
 const COMPOSE_PROJECT = "kroki-shared";
@@ -9,13 +10,60 @@ const HEALTH_TIMEOUT_MS = 30_000;
 const HEALTH_POLL_START_MS = 500;
 const HEALTH_POLL_MAX_MS = 2_000;
 
-// Resolved at module load so it's portable regardless of cwd.
-// spawnSync/spawn receive it as a single argv element — no shell, no injection risk.
-const composeFile = join(
-  dirname(fileURLToPath(import.meta.url)),
-  "..",
-  "docker-compose.yml"
-);
+// The Kroki stack is embedded here rather than read from a sibling
+// docker-compose.yml so the server works as a single compiled binary
+// (`bun build --compile`), where there is no file on disk next to the
+// executable. It is materialized to a temp file only if the auto-start
+// fallback actually runs — the primary path is a shared KROKI_URL endpoint.
+const COMPOSE_YAML = `services:
+  kroki:
+    image: yuzutech/kroki
+    ports:
+      - "127.0.0.1:18000:8000"
+    environment:
+      - KROKI_MERMAID_HOST=mermaid
+      - KROKI_BPMN_HOST=bpmn
+      - KROKI_EXCALIDRAW_HOST=excalidraw
+      - KROKI_BLOCKDIAG_HOST=blockdiag
+      - KROKI_SEQDIAG_HOST=blockdiag
+      - KROKI_ACTDIAG_HOST=blockdiag
+      - KROKI_NWDIAG_HOST=blockdiag
+      - KROKI_PACKETDIAG_HOST=blockdiag
+      - KROKI_RACKDIAG_HOST=blockdiag
+      - KROKI_DIAGRAMSNET_HOST=diagramsnet
+    depends_on:
+      - mermaid
+      - bpmn
+      - excalidraw
+      - blockdiag
+      - diagramsnet
+
+  mermaid:
+    image: yuzutech/kroki-mermaid
+
+  bpmn:
+    image: yuzutech/kroki-bpmn
+
+  excalidraw:
+    image: yuzutech/kroki-excalidraw
+
+  blockdiag:
+    image: yuzutech/kroki-blockdiag
+
+  diagramsnet:
+    image: yuzutech/kroki-diagramsnet
+`;
+
+// Materialize the embedded compose to a stable temp path so `docker compose`
+// (a separate process) can read it. A stable path means the same project reuses
+// one file across runs. spawn receives it as a single argv element — no shell.
+function composeFilePath(): string {
+  const dir = join(tmpdir(), COMPOSE_PROJECT);
+  mkdirSync(dir, { recursive: true });
+  const path = join(dir, "docker-compose.yml");
+  writeFileSync(path, COMPOSE_YAML);
+  return path;
+}
 
 async function isHealthy(): Promise<boolean> {
   try {
@@ -34,6 +82,7 @@ async function isHealthy(): Promise<boolean> {
 
 function startContainers(): Promise<void> {
   return new Promise((resolve, reject) => {
+    const composeFile = composeFilePath();
     const proc = spawn(
       "docker",
       ["compose", "-p", COMPOSE_PROJECT, "-f", composeFile, "up", "-d"],
