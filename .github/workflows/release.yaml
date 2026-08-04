@@ -29,11 +29,14 @@ jobs:
         # dev/tests); bun migrates it on install, which trips the frozen check.
         run: bun install
 
-      - name: Compile single binary (darwin/arm64)
+      - name: Compile binaries (darwin + linux)
+        # darwin/arm64 → Homebrew; linux/arm64+amd64 → the mcp-gateway container
+        # image bakes these (mcp-kroki isn't on npm, so the gateway can't npx it).
         run: |
-          mkdir -p build
-          bun build --compile --target=bun-darwin-arm64 ./src/index.ts --outfile build/mcp-kroki
-          tar -czf mcp-kroki_darwin_arm64.tar.gz -C build mcp-kroki
+          build() { mkdir -p build && bun build --compile --target="$1" ./src/index.ts --outfile build/mcp-kroki && tar -czf "$2" -C build mcp-kroki && rm -rf build; }
+          build bun-darwin-arm64 mcp-kroki_darwin_arm64.tar.gz
+          build bun-linux-arm64  mcp-kroki_linux_arm64.tar.gz
+          build bun-linux-x64    mcp-kroki_linux_amd64.tar.gz
 
       - name: Resolve version + checksum
         id: meta
@@ -45,11 +48,12 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "${GITHUB_REF_NAME}" mcp-kroki_darwin_arm64.tar.gz \
+          assets="mcp-kroki_darwin_arm64.tar.gz mcp-kroki_linux_arm64.tar.gz mcp-kroki_linux_amd64.tar.gz"
+          gh release create "${GITHUB_REF_NAME}" $assets \
             --repo "${GITHUB_REPOSITORY}" \
             --title "${GITHUB_REF_NAME}" \
             --generate-notes || \
-          gh release upload "${GITHUB_REF_NAME}" mcp-kroki_darwin_arm64.tar.gz \
+          gh release upload "${GITHUB_REF_NAME}" $assets \
             --repo "${GITHUB_REPOSITORY}" --clobber
 
       - name: Render + push Homebrew formula
