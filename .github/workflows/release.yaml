@@ -25,7 +25,9 @@ jobs:
           bun-version: latest
 
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        # Not --frozen-lockfile: the repo ships package-lock.json (npm is used for
+        # dev/tests); bun migrates it on install, which trips the frozen check.
+        run: bun install
 
       - name: Compile single binary (darwin/arm64)
         run: |
