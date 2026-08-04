@@ -31,14 +31,17 @@ SVG is returned as a text block. PNG/JPEG are returned as base64 image blocks, o
 
 ## Requirements
 
-- Node.js 20+
-- Docker with Compose V2 (`docker compose` command)
+- A reachable Kroki endpoint via `KROKI_URL` (recommended: a shared/central instance)
+- Docker with Compose V2 (`docker compose`) — only for the local auto-start fallback when `KROKI_URL` is unset/unreachable
+
+The released binary is self-contained (no Node.js runtime needed). Node.js 20+ is only needed to build from source (see Development).
 
 ## Installation
 
+Distributed as a single self-contained binary via Homebrew (no Node.js required):
+
 ```bash
-npm install
-npm run build
+brew install neverprepared/tap/mcp-kroki
 ```
 
 ## Claude Code configuration
@@ -49,8 +52,7 @@ Add to your `~/.claude/claude.json` (or project-level `.claude/claude.json`):
 {
   "mcpServers": {
     "kroki": {
-      "command": "npx",
-      "args": ["-y", "@neverprepared/mcp-kroki"],
+      "command": "mcp-kroki",
       "env": { "KROKI_URL": "http://localhost:18000" }
     }
   }
