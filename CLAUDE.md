@@ -36,7 +36,7 @@ static-analysis gate — run it before committing.
 - `.github/workflows/ci.yml` — on push/PR to `main`: `npm ci` → `typecheck` → `test:unit` →
   `build`. Integration tests are deliberately skipped in CI (no Docker).
 - `.github/workflows/release.yaml` — on `v*` tags (or `workflow_dispatch`): runs on
-  `macos-14`, `bun install` (not `--frozen-lockfile` — bun migrates `package-lock.json`),
+  `ubuntu-latest` (bun cross-compiles all targets; no macOS needed), `bun install` (not `--frozen-lockfile` — bun migrates `package-lock.json`),
   compiles `bun-darwin-arm64` + `bun-linux-arm64` + `bun-linux-x64` binaries, publishes a
   GitHub release, and renders `Formula/mcp-kroki.rb` into `neverprepared/homebrew-tap`
   (skipped when `HOMEBREW_TAP_TOKEN` is unset). Linux binaries exist so the mcp-gateway
