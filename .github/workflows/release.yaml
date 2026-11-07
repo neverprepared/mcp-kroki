@@ -16,7 +16,13 @@ permissions:
 
 jobs:
   release:
-    runs-on: macos-14 # Apple Silicon (arm64)
+    # ubuntu-latest, not a pinned macOS image: `bun build --compile --target=…`
+    # cross-compiles every target (verified: the bun-darwin-arm64 output built on
+    # Linux carries the ad-hoc LC_CODE_SIGNATURE Apple Silicon requires), so no
+    # step needs macOS or Xcode. A pinned hosted macOS label (was `macos-14`) is
+    # eventually de-allocated and the job then fails having run zero steps.
+    # Not self-hosted: this repo is public and the org pool is persistent.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
